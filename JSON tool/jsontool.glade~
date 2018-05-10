@@ -238,11 +238,13 @@
                 <property name="margin_right">2</property>
                 <property name="margin_top">1</property>
                 <property name="margin_bottom">2</property>
+                <property name="spacing">4</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkToolButton" id="open_rawjson">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Save to file</property>
+                    <property name="tooltip_text" translatable="yes">Open json file</property>
                     <property name="label" translatable="yes">Open</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-open</property>
@@ -303,26 +305,6 @@
                 <property name="margin_right">22</property>
                 <property name="spacing">5</property>
                 <child>
-                  <object class="GtkButton" id="button_convert">
-                    <property name="label">gtk-apply</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="use_stock">True</property>
-                    <property name="focus_on_click">False</property>
-                    <property name="xalign">0.51999998092651367</property>
-                    <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="onProcessButtonClicked" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkComboBox" id="cb_spaces">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -340,7 +322,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
-                    <property name="position">2</property>
+                    <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
@@ -355,7 +337,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">4</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </object>
@@ -376,6 +358,7 @@
                 <property name="margin_top">2</property>
                 <property name="margin_bottom">2</property>
                 <property name="spacing">4</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkToolButton" id="save_formattedjson">
                     <property name="visible">True</property>
@@ -428,6 +411,24 @@
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="refresh_formattedjson">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Refresh</property>
+                    <property name="halign">start</property>
+                    <property name="valign">start</property>
+                    <property name="label" translatable="yes">Refresh</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-refresh</property>
+                    <signal name="clicked" handler="onProcessButtonClicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
               </object>

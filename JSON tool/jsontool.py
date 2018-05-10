@@ -2,12 +2,13 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('GtkSource', '3.0')
 import json
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from gi.repository import GtkSource
 from gi.repository import GObject
 import os, urlparse, urllib
 
-def processJsonString():
+
+def processJsonString(*args):
     sp_progress.start()
     rawJsonString = getRawContent()
     spaces = 4 - cb_spaces.get_active()
@@ -96,7 +97,7 @@ def resetStatus(self, widget):
 
 
 def load_file():
-    dialog = Gtk.FileChooserDialog("Open ...", None,
+    dialog = Gtk.FileChooserDialog("Open JSON file", None,
                                    Gtk.FileChooserAction.OPEN,
                                    (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                     Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
@@ -112,22 +113,21 @@ def load_file():
     dialog.destroy()
 
 
-def save_file(file_content):
+def save_file():
     dialog = Gtk.FileChooserDialog("Save File", None,
                                    Gtk.FileChooserAction.SAVE,
                                    (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                    Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-    dialog.set_current_name("prettyjson.txt")
-    response = dialog.run()
-    if response == Gtk.ResponseType.OK:
-        session_file = dialog.get_filename()
-        fileuri = dialog.get_uri()
+                                    Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
-        p = urlparse.urlparse(fileuri)
-        finalPath = urllib.unquote(os.path.abspath(
-            os.path.join(p.netloc, p.path)))
-        file = open(finalPath, "r")
-        setRawContent(file.read())
+    response = dialog.run()
+
+    if response == Gtk.ResponseType.OK:
+        filename = dialog.get_filename()
+        print(filename, 'selected.')
+        try:
+            open(filename, 'w').write(getResContent())
+        except SomeError as err:
+            print('Could not save')
     dialog.destroy()
 
 
@@ -139,7 +139,7 @@ class Handler:
         print("Hello World!")
 
     def onProcessButtonClicked(self, button):
-        processJsonString()
+        processJsonString(None, None)
 
     def onRawJsonTVDelete(self, button):
         resetStatus(None, None)
@@ -165,7 +165,7 @@ class Handler:
 
     def onResJsonSave(self, button):
         resetStatus(None, None)
-        save_file("cica")
+        save_file()
 
     def onRawJsonOpen(self, button):
         resetStatus(None, None)
@@ -186,9 +186,11 @@ window.show_all()
 # Comboboxes
 cb_spaces = builder.get_object("cb_spaces")
 cb_spaces.set_active(0)
+cb_spaces.connect('changed', processJsonString)
 
 chb_sort_keys = builder.get_object("chb_sort_keys")
 chb_sort_keys.set_active(True)
+chb_sort_keys.connect('toggled', processJsonString)
 
 # TextViews
 tv_json_raw = builder.get_object("textview_rawjson")
@@ -205,6 +207,7 @@ tv_status = builder.get_object("tv_status_label")
 
 # connect textbuffers to changed events
 tv_json_raw.get_buffer().connect("changed", updateRawStatus, None)
+tv_json_raw.get_buffer().connect("changed", processJsonString, None)
 tv_json_raw.get_buffer().connect("changed", resetStatus, None)
 tv_json_result.get_buffer().connect("changed", updateResStatus, None)
 tv_json_result.connect("grab-focus", resetStatus, None)
