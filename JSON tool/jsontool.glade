@@ -5,15 +5,16 @@
   <requires lib="gtksourceview" version="3.0"/>
   <object class="GtkAboutDialog" id="aboutdialog1">
     <property name="can_focus">False</property>
-    <property name="type">popup</property>
     <property name="type_hint">dialog</property>
-    <property name="program_name">JSONTool</property>
-    <property name="copyright" translatable="yes">János Jakub &amp; Ákos Jakub</property>
-    <property name="comments" translatable="yes">JSONTool is a Linux based opensource JSON document validator</property>
-    <property name="authors">János Jakub
-Ákos Jakub</property>
-    <property name="artists">Ákos Jakub</property>
-    <property name="logo">logo.png</property>
+    <property name="program_name">JSON tool</property>
+    <property name="version">0.7.5</property>
+    <property name="copyright" translatable="yes">Copyright © 2017-2018 Janos Jakub</property>
+    <property name="comments" translatable="yes">JSON tool is an opensource tool for handling and formatting json files.</property>
+    <property name="website">https://github.com/Theophrast/jsontool</property>
+    <property name="website_label" translatable="yes">Github page</property>
+    <property name="authors">Janos Jakub</property>
+    <property name="artists">Akos Jakub</property>
+    <property name="logo_icon_name">folder</property>
     <property name="license_type">gpl-3-0</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="aboutdialog-vbox1">
@@ -24,6 +25,19 @@
           <object class="GtkButtonBox" id="aboutdialog-action_area1">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="bt_about_close">
+                <property name="label" translatable="yes">Close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -31,44 +45,8 @@
             <property name="position">0</property>
           </packing>
         </child>
-        <child>
-          <placeholder/>
-        </child>
       </object>
     </child>
-  </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-select-font</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-select-color</property>
-  </object>
-  <object class="GtkListStore" id="json_template_elements">
-    <columns>
-      <!-- column-name json_templates -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">4 Space indent</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">3 Space indent</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">2 Space indent</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">1 Space indent</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">0 Space indent</col>
-      </row>
-    </data>
   </object>
   <object class="GtkWindow" id="mainwindow">
     <property name="can_focus">False</property>
@@ -187,22 +165,7 @@
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_About</property>
                 <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu3">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem10">
-                        <property name="label">gtk-about</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <signal name="activate" handler="onDeleteWindow" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <signal name="activate" handler="onAboutClicked" swapped="no"/>
               </object>
             </child>
           </object>
@@ -310,7 +273,6 @@
                     <property name="can_focus">False</property>
                     <property name="halign">center</property>
                     <property name="valign">center</property>
-                    <property name="model">json_template_elements</property>
                     <property name="active">0</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderertext1"/>

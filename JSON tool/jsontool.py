@@ -1,3 +1,4 @@
+# coding=utf-8
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('GtkSource', '3.0')
@@ -7,6 +8,8 @@ from gi.repository import GtkSource
 from gi.repository import GObject
 import os, urlparse, urllib
 
+app_name = "JSON tool"
+app_version ="0.1"
 
 def processJsonString(*args):
     sp_progress.start()
@@ -130,6 +133,18 @@ def save_file():
             print('Could not save')
     dialog.destroy()
 
+def show_aboutdialog():
+    about = Gtk.AboutDialog()
+    about.set_program_name(app_name)
+    about.set_version(app_version)
+    about.set_copyright("Copyright © 2017-2018 Janos Jakub")
+    about.set_comments("JSON tool is a simple, open source tool for handling and formatting JSON files.")
+    about.set_website_label("Github page")
+    about.set_website("https://github.com/Theophrast/jsontool")
+    # about.set_logo(Gdk.pixbuf_new_from_file("battery.png"))
+    about.run()
+    about.destroy()
+
 
 class Handler:
     def onDeleteWindow(self, *args):
@@ -171,7 +186,11 @@ class Handler:
         resetStatus(None, None)
         load_file()
 
+    def onAboutClicked(self, *args):
+        show_aboutdialog()
+
 # ----------------------------------------------
+
 
 
 builder = Gtk.Builder()
@@ -182,6 +201,8 @@ builder.connect_signals(Handler())
 window = builder.get_object("mainwindow")
 window.connect("delete-event", Gtk.main_quit)
 window.show_all()
+
+
 
 # Comboboxes
 cb_spaces = builder.get_object("cb_spaces")
