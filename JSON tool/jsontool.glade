@@ -53,7 +53,7 @@
     <property name="title" translatable="yes">JSON tool </property>
     <property name="default_width">1200</property>
     <property name="default_height">720</property>
-    <property name="hide_titlebar_when_maximized">True</property>
+    <property name="icon">logo.png</property>
     <child>
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>

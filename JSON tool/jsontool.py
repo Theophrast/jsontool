@@ -6,15 +6,23 @@ import json
 from gi.repository import Gtk, Gdk
 from gi.repository import GtkSource
 from gi.repository import GObject
-import os, urlparse, urllib
+import os
 
 app_name = "JSON tool"
 app_version ="0.1"
 
+def get_resource_path(rel_path):
+    dir_of_py_file = os.path.dirname(__file__)
+    rel_path_to_resource = os.path.join(dir_of_py_file, rel_path)
+    abs_path_to_resource = os.path.abspath(rel_path_to_resource)
+    return abs_path_to_resource
+
+
 def processJsonString(*args):
     sp_progress.start()
     rawJsonString = getRawContent()
-    spaces = 4 - cb_spaces.get_active()
+
+    cb_indent_choice = cb_indent.get_active()
     sortKeys = chb_sort_keys.get_active()
 
     # return if the raw dataset is empty
@@ -26,7 +34,14 @@ def processJsonString(*args):
 
     try:
         parsed_json = json.loads(rawJsonString)
-        prettyJson = json.dumps(parsed_json, sort_keys=sortKeys, indent=spaces)
+
+        if cb_indent_choice == 0:
+            #only from Python 3.2+
+            prettyJson = json.dumps(parsed_json, sort_keys=sortKeys, indent='\t')
+        else :
+            prettyJson = json.dumps(parsed_json, sort_keys=sortKeys, indent=(5-cb_indent_choice))
+
+
         setResContent(prettyJson)
         setStatusMessage("Valid JSON")
         sp_progress.stop()
@@ -106,15 +121,13 @@ def load_file():
                                     Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
     response = dialog.run()
     if response == Gtk.ResponseType.OK:
-        fileuri = dialog.get_uri()
+        fileuri = dialog.get_filename()
 
-        p = urlparse.urlparse(fileuri)
-        finalPath = urllib.unquote(os.path.abspath(
-            os.path.join(p.netloc, p.path)))
-        file = open(finalPath, "r")
-        setRawContent(file.read())
+        with open(fileuri) as f:
+            read_data = f.read()
+        setRawContent(read_data)
+
     dialog.destroy()
-
 
 def save_file():
     dialog = Gtk.FileChooserDialog("Save File", None,
@@ -125,15 +138,14 @@ def save_file():
     response = dialog.run()
 
     if response == Gtk.ResponseType.OK:
-        filename = dialog.get_filename()
-        print(filename, 'selected.')
-        try:
-            open(filename, 'w').write(getResContent())
-        except SomeError as err:
-            print('Could not save')
+        fileuri = dialog.get_filename()
+
+        with open(fileuri,'w') as f:
+            f.write(getResContent())
+
     dialog.destroy()
 
-def show_aboutdialog():
+def show_aboutdialog(self ):
     about = Gtk.AboutDialog()
     about.set_program_name(app_name)
     about.set_version(app_version)
@@ -141,6 +153,9 @@ def show_aboutdialog():
     about.set_comments("JSON tool is a simple, open source tool for handling and formatting JSON files.")
     about.set_website_label("Github page")
     about.set_website("https://github.com/Theophrast/jsontool")
+    about.set_logo(None)
+
+
     # about.set_logo(Gdk.pixbuf_new_from_file("battery.png"))
     about.run()
     about.destroy()
@@ -187,7 +202,7 @@ class Handler:
         load_file()
 
     def onAboutClicked(self, *args):
-        show_aboutdialog()
+        show_aboutdialog(self)
 
 # ----------------------------------------------
 
@@ -205,9 +220,14 @@ window.show_all()
 
 
 # Comboboxes
-cb_spaces = builder.get_object("cb_spaces")
-cb_spaces.set_active(0)
-cb_spaces.connect('changed', processJsonString)
+cb_indent = builder.get_object("cb_spaces")
+liststore = Gtk.ListStore(str)
+for item in ["Tab indent",  "4 Space indent", "3 Space indent", "2 Space indent","1 Space indent", "0 Space indent"]:
+    liststore.append([item])
+
+cb_indent.set_model(liststore)
+cb_indent.set_active(0)
+cb_indent.connect('changed', processJsonString)
 
 chb_sort_keys = builder.get_object("chb_sort_keys")
 chb_sort_keys.set_active(True)
