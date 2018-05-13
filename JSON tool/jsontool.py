@@ -1,5 +1,6 @@
 # coding=utf-8
 import gi
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('GtkSource', '3.0')
 import json
@@ -9,7 +10,8 @@ from gi.repository import GObject
 import os
 
 app_name = "JSON tool"
-app_version ="0.1"
+app_version = "0.1"
+
 
 def get_resource_path(rel_path):
     dir_of_py_file = os.path.dirname(__file__)
@@ -36,11 +38,13 @@ def processJsonString(*args):
         parsed_json = json.loads(rawJsonString)
 
         if cb_indent_choice == 0:
-            #only from Python 3.2+
+            # only from Python 3.2+
             prettyJson = json.dumps(parsed_json, sort_keys=sortKeys, indent='\t')
-        else :
-            prettyJson = json.dumps(parsed_json, sort_keys=sortKeys, indent=(5-cb_indent_choice))
-
+        elif (cb_indent_choice > 0 and cb_indent_choice < 6):
+            prettyJson = json.dumps(parsed_json, sort_keys=sortKeys, indent=(5 - cb_indent_choice))
+        else:
+            prettyJson = json.dumps(parsed_json, sort_keys=sortKeys, indent=0)
+            prettyJson = prettyJson.replace("\r", "").replace("\n", "")
 
         setResContent(prettyJson)
         setStatusMessage("Valid JSON")
@@ -64,7 +68,7 @@ def updateRawCursor(self, widget):
     cIter.set_offset(cPos)
     cursorLinePos = cIter.get_line() + 1
     cursorPosInLine = cIter.get_line_offset() + 1
-    cursorStr = "Ln " + str(cursorLinePos)+", col " + str(cursorPosInLine)
+    cursorStr = "Ln " + str(cursorLinePos) + ", col " + str(cursorPosInLine)
     status_raw_cursor.set_text(cursorStr)
 
 
@@ -76,8 +80,9 @@ def updateResStatus(self, widget):
 
 
 def getCharsAndLinesString(char_count, line_count):
-    charsandlinesStr = str(char_count) + " chars, " + str(line_count)+" lines"
+    charsandlinesStr = str(char_count) + " chars, " + str(line_count) + " lines"
     return charsandlinesStr
+
 
 # --------------------------------------------------------------
 # get contents from textviews
@@ -93,6 +98,7 @@ def getResContent():
     st_res, end_res = tv_json_result.get_buffer().get_bounds()
     resStr = tv_json_result.get_buffer().get_text(st_res, end_res, True)
     return resStr
+
 
 # set content for textViews
 
@@ -129,6 +135,7 @@ def load_file():
 
     dialog.destroy()
 
+
 def save_file():
     dialog = Gtk.FileChooserDialog("Save File", None,
                                    Gtk.FileChooserAction.SAVE,
@@ -140,12 +147,13 @@ def save_file():
     if response == Gtk.ResponseType.OK:
         fileuri = dialog.get_filename()
 
-        with open(fileuri,'w') as f:
+        with open(fileuri, 'w') as f:
             f.write(getResContent())
 
     dialog.destroy()
 
-def show_aboutdialog(self ):
+
+def show_aboutdialog(self):
     about = Gtk.AboutDialog()
     about.set_program_name(app_name)
     about.set_version(app_version)
@@ -154,7 +162,6 @@ def show_aboutdialog(self ):
     about.set_website_label("Github page")
     about.set_website("https://github.com/Theophrast/jsontool")
     about.set_logo(None)
-
 
     # about.set_logo(Gdk.pixbuf_new_from_file("battery.png"))
     about.run()
@@ -204,8 +211,8 @@ class Handler:
     def onAboutClicked(self, *args):
         show_aboutdialog(self)
 
-# ----------------------------------------------
 
+# ----------------------------------------------
 
 
 builder = Gtk.Builder()
@@ -217,12 +224,11 @@ window = builder.get_object("mainwindow")
 window.connect("delete-event", Gtk.main_quit)
 window.show_all()
 
-
-
 # Comboboxes
 cb_indent = builder.get_object("cb_spaces")
 liststore = Gtk.ListStore(str)
-for item in ["Tab indent",  "4 Space indent", "3 Space indent", "2 Space indent","1 Space indent", "0 Space indent"]:
+for item in ["Tab indent", "4 Space indent", "3 Space indent", "2 Space indent", "1 Space indent", "0 Space indent",
+             "Minify"]:
     liststore.append([item])
 
 cb_indent.set_model(liststore)
@@ -245,7 +251,6 @@ status_res_line = builder.get_object("status_res_line")
 sp_progress = builder.get_object("sp_status")
 tv_status = builder.get_object("tv_status_label")
 
-
 # connect textbuffers to changed events
 tv_json_raw.get_buffer().connect("changed", updateRawStatus, None)
 tv_json_raw.get_buffer().connect("changed", processJsonString, None)
@@ -254,7 +259,6 @@ tv_json_result.get_buffer().connect("changed", updateResStatus, None)
 tv_json_result.connect("grab-focus", resetStatus, None)
 tv_json_raw.get_buffer().connect("notify::cursor-position", updateRawCursor)
 tv_json_raw.get_buffer().connect("notify::cursor-position", resetStatus)
-
 
 # clear all text fields
 updateRawStatus(None, None)
