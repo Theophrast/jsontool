@@ -27,10 +27,9 @@ def processJsonString(*args):
     cb_indent_choice = cb_indent.get_active()
     sortKeys = chb_sort_keys.get_active()
 
-    # return if the raw dataset is empty
     if len(rawJsonString) < 1:
         setResContent("")
-        setStatusMessage("Empty field")
+        setStatusMessage("")
         sp_progress.stop()
         return
 
@@ -142,6 +141,8 @@ def save_file():
                                    (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                     Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
 
+    dialog.set_do_overwrite_confirmation(True)
+    dialog.set_current_name("exported.txt")
     response = dialog.run()
 
     if response == Gtk.ResponseType.OK:
@@ -241,7 +242,10 @@ chb_sort_keys.connect('toggled', processJsonString)
 
 # TextViews
 tv_json_raw = builder.get_object("textview_rawjson")
+tv_json_raw.set_show_line_numbers(True)
+
 tv_json_result = builder.get_object("textview_resultjson")
+tv_json_result.set_show_line_numbers(True)
 
 # statusbar
 status_raw_cursor = builder.get_object("status_raw_cursor")
@@ -255,6 +259,7 @@ tv_status = builder.get_object("tv_status_label")
 tv_json_raw.get_buffer().connect("changed", updateRawStatus, None)
 tv_json_raw.get_buffer().connect("changed", processJsonString, None)
 tv_json_raw.get_buffer().connect("changed", resetStatus, None)
+
 tv_json_result.get_buffer().connect("changed", updateResStatus, None)
 tv_json_result.connect("grab-focus", resetStatus, None)
 tv_json_raw.get_buffer().connect("notify::cursor-position", updateRawCursor)
