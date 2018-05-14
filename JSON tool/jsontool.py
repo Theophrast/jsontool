@@ -72,8 +72,8 @@ def updateRawCursor(self, widget):
 
 
 def updateResStatus(self, widget):
-    res_char_count = tv_json_result.get_buffer().get_char_count()
-    res_line_count = tv_json_result.get_buffer().get_line_count()
+    res_char_count = tv_json_res.get_buffer().get_char_count()
+    res_line_count = tv_json_res.get_buffer().get_line_count()
     finalStr = getCharsAndLinesString(res_char_count, res_line_count)
     status_res_line.set_text(finalStr)
 
@@ -94,8 +94,8 @@ def getRawContent():
 
 
 def getResContent():
-    st_res, end_res = tv_json_result.get_buffer().get_bounds()
-    resStr = tv_json_result.get_buffer().get_text(st_res, end_res, True)
+    st_res, end_res = tv_json_res.get_buffer().get_bounds()
+    resStr = tv_json_res.get_buffer().get_text(st_res, end_res, True)
     return resStr
 
 
@@ -107,7 +107,7 @@ def setRawContent(content):
 
 
 def setResContent(content):
-    tv_json_result.get_buffer().set_text(content)
+    tv_json_res.get_buffer().set_text(content)
 
 
 def setStatusMessage(content):
@@ -241,11 +241,22 @@ chb_sort_keys.set_active(True)
 chb_sort_keys.connect('toggled', processJsonString)
 
 # TextViews
-tv_json_raw = builder.get_object("textview_rawjson")
-tv_json_raw.set_show_line_numbers(True)
+container = builder.get_object("box2")
 
-tv_json_result = builder.get_object("textview_resultjson")
-tv_json_result.set_show_line_numbers(True)
+tv_json_raw = GtkSource.View.new()
+tv_json_raw.set_show_line_numbers(True)
+scrolledwindow_raw = Gtk.ScrolledWindow()
+container.pack_start(scrolledwindow_raw, True, True, 0)
+scrolledwindow_raw.add_with_viewport(tv_json_raw)
+scrolledwindow_raw.show_all()
+
+tv_json_res = GtkSource.View.new()
+tv_json_res.set_show_line_numbers(True)
+scrolledwindow_res = Gtk.ScrolledWindow()
+container.pack_start(scrolledwindow_res, True, True, 0)
+scrolledwindow_res.add_with_viewport(tv_json_res)
+scrolledwindow_res.show_all()
+
 
 # statusbar
 status_raw_cursor = builder.get_object("status_raw_cursor")
@@ -254,14 +265,14 @@ status_res_line = builder.get_object("status_res_line")
 
 sp_progress = builder.get_object("sp_status")
 tv_status = builder.get_object("tv_status_label")
-
+#
 # connect textbuffers to changed events
 tv_json_raw.get_buffer().connect("changed", updateRawStatus, None)
 tv_json_raw.get_buffer().connect("changed", processJsonString, None)
 tv_json_raw.get_buffer().connect("changed", resetStatus, None)
 
-tv_json_result.get_buffer().connect("changed", updateResStatus, None)
-tv_json_result.connect("grab-focus", resetStatus, None)
+tv_json_res.get_buffer().connect("changed", updateResStatus, None)
+tv_json_res.connect("grab-focus", resetStatus, None)
 tv_json_raw.get_buffer().connect("notify::cursor-position", updateRawCursor)
 tv_json_raw.get_buffer().connect("notify::cursor-position", resetStatus)
 
