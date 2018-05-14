@@ -21,7 +21,6 @@ def get_resource_path(rel_path):
 
 
 def processJsonString(*args):
-    sp_progress.start()
     rawJsonString = getRawContent()
 
     cb_indent_choice = cb_indent.get_active()
@@ -30,7 +29,6 @@ def processJsonString(*args):
     if len(rawJsonString) < 1:
         setResContent("")
         setStatusMessage("")
-        sp_progress.stop()
         return
 
     try:
@@ -47,11 +45,9 @@ def processJsonString(*args):
 
         setResContent(prettyJson)
         setStatusMessage("Valid JSON")
-        sp_progress.stop()
     except:
         setResContent("")
         setStatusMessage("Invalid JSON")
-        sp_progress.stop()
 
 
 def updateRawStatus(self, widget):
@@ -115,7 +111,6 @@ def setStatusMessage(content):
 
 
 def resetStatus(self, widget):
-    sp_progress.stop()
     setStatusMessage("")
 
 
@@ -179,13 +174,13 @@ class Handler:
     def onProcessButtonClicked(self, button):
         processJsonString(None, None)
 
-    def onRawJsonTVDelete(self, button):
+    def onRawJsonDelete(self, button):
         resetStatus(None, None)
         setRawContent("")
 
-    def onResultJsonTVDelete(self, button):
+    def onResultJsonDelete(self, button):
         resetStatus(None, None)
-        tv_json_result.get_buffer().set_text("")
+        tv_json_res.get_buffer().set_text("")
 
     def onRawJsonCopyToClipboard(self, button):
         resetStatus(None, None)
@@ -209,6 +204,9 @@ class Handler:
         resetStatus(None, None)
         load_file()
 
+    def onResJsonRefresh(self, button):
+        processJsonString()
+
     def onAboutClicked(self, *args):
         show_aboutdialog(self)
 
@@ -221,12 +219,12 @@ GObject.type_register(GtkSource.View)
 builder.add_from_file("jsontool.glade")
 builder.connect_signals(Handler())
 
-window = builder.get_object("mainwindow")
-window.connect("delete-event", Gtk.main_quit)
-window.show_all()
+app_window = builder.get_object("main_window")
+app_window.connect("delete-event", Gtk.main_quit)
+app_window.show_all()
 
-# Comboboxes
-cb_indent = builder.get_object("cb_spaces")
+# Combobox for indentication
+cb_indent = builder.get_object("cb_indent")
 liststore = Gtk.ListStore(str)
 for item in ["Tab indent", "4 Space indent", "3 Space indent", "2 Space indent", "1 Space indent", "0 Space indent",
              "Minify"]:
@@ -236,25 +234,26 @@ cb_indent.set_model(liststore)
 cb_indent.set_active(0)
 cb_indent.connect('changed', processJsonString)
 
+# Checkbox for sorting keys
 chb_sort_keys = builder.get_object("chb_sort_keys")
 chb_sort_keys.set_active(True)
 chb_sort_keys.connect('toggled', processJsonString)
 
 # TextViews
-container = builder.get_object("box2")
+container = builder.get_object("box_sourceview_container")
 
 tv_json_raw = GtkSource.View.new()
 tv_json_raw.set_show_line_numbers(True)
 scrolledwindow_raw = Gtk.ScrolledWindow()
 container.pack_start(scrolledwindow_raw, True, True, 0)
-scrolledwindow_raw.add_with_viewport(tv_json_raw)
+scrolledwindow_raw.add(tv_json_raw)
 scrolledwindow_raw.show_all()
 
 tv_json_res = GtkSource.View.new()
 tv_json_res.set_show_line_numbers(True)
 scrolledwindow_res = Gtk.ScrolledWindow()
 container.pack_start(scrolledwindow_res, True, True, 0)
-scrolledwindow_res.add_with_viewport(tv_json_res)
+scrolledwindow_res.add(tv_json_res)
 scrolledwindow_res.show_all()
 
 
@@ -262,10 +261,9 @@ scrolledwindow_res.show_all()
 status_raw_cursor = builder.get_object("status_raw_cursor")
 status_raw_line = builder.get_object("status_raw_line")
 status_res_line = builder.get_object("status_res_line")
-
-sp_progress = builder.get_object("sp_status")
 tv_status = builder.get_object("tv_status_label")
-#
+
+
 # connect textbuffers to changed events
 tv_json_raw.get_buffer().connect("changed", updateRawStatus, None)
 tv_json_raw.get_buffer().connect("changed", processJsonString, None)
