@@ -181,7 +181,7 @@
                 <property name="spacing">4</property>
                 <property name="homogeneous">True</property>
                 <child>
-                  <object class="GtkToolButton" id="save_formattedjson">
+                  <object class="GtkToolButton" id="tool_res_save">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">Save to file</property>
@@ -199,7 +199,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToolButton" id="copy_formattedjson">
+                  <object class="GtkToolButton" id="tool_res_copy">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">Copy to clipboard</property>
@@ -217,7 +217,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToolButton" id="delete_formattedjson">
+                  <object class="GtkToolButton" id="tool_res_delete">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">Reset</property>
@@ -235,7 +235,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToolButton" id="refresh_formattedjson">
+                  <object class="GtkToolButton" id="tool_res_refresh">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">Refresh</property>
