@@ -84,7 +84,6 @@
                     <property name="label" translatable="yes">Open</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-open</property>
-                    <signal name="clicked" handler="onRawJsonOpen" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -100,7 +99,6 @@
                     <property name="label" translatable="yes">Copy</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-copy</property>
-                    <signal name="clicked" handler="onRawJsonCopyToClipboard" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -116,7 +114,6 @@
                     <property name="label" translatable="yes">Reset</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-delete</property>
-                    <signal name="clicked" handler="onRawJsonDelete" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -190,7 +187,6 @@
                     <property name="label" translatable="yes">Save</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-save</property>
-                    <signal name="clicked" handler="onResJsonSave" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -208,7 +204,6 @@
                     <property name="label" translatable="yes">Copy</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-copy</property>
-                    <signal name="clicked" handler="onResJsonCopyToClipboard" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -226,7 +221,6 @@
                     <property name="label" translatable="yes">Reset</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-delete</property>
-                    <signal name="clicked" handler="onResultJsonDelete" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -244,7 +238,6 @@
                     <property name="label" translatable="yes">Refresh</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-refresh</property>
-                    <signal name="clicked" handler="onResJsonRefresh" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

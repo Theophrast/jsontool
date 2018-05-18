@@ -4,7 +4,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('GtkSource', '3.0')
 import json
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, Gio
 from gi.repository import GtkSource
 from gi.repository import GObject
 import os
@@ -13,7 +13,7 @@ app_name = "JSON tool"
 app_version = "0.1"
 
 
-class JsonToolApplication(Gtk.Window):
+class JsonToolApplication(Gtk.Application):
 
     def __init__(self, *args, **kwargs):
         Gtk.Window.__init__(self, *args, **kwargs)
@@ -25,6 +25,7 @@ class JsonToolApplication(Gtk.Window):
         app_window = self.builder.get_object("main_window")
         app_window.connect("delete-event", Gtk.main_quit)
         self.create_widgets()
+        self.create_menu()
         app_window.show_all()
 
     def create_widgets(self):
