@@ -28,6 +28,30 @@ class JsonToolApplication(Gtk.Application):
         self.create_menu()
         app_window.show_all()
 
+    def create_menu(self):
+
+        # create a menu
+        # menu = Gio.Menu()
+        # # append to the menu three options
+        # menu.append("New", "app.new")
+        # menu.append("About", "app.about")
+        # menu.append("Quit", "app.quit")
+        # # set the menu as menu of the application
+        # self.set_app_menu(menu)
+
+        # # create an action for the option "new" of the menu
+        # new_action = Gio.SimpleAction.new("new", None)
+        # # connect it to the callback function new_cb
+        # new_action.connect("activate", self.new_cb)
+        # # add the action to the application
+        # self.add_action(new_action)
+        #
+        # # option "about"
+        # about_action = Gio.SimpleAction.new("about", None)
+        # about_action.connect("activate", self.about_cb)
+        # self.add_action(about_action)
+
+
     def create_widgets(self):
         # toolbar items RAW json side
         raw_toolbar_open =self.builder.get_object("tool_raw_open")
