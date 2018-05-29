@@ -33,13 +33,24 @@ class AppWindow(object):
             self.create_widgets()
             # self.create_menu()
 
+            css_provider = Gtk.CssProvider()
+            css_provider.load_from_path('style.css')
+            screen = Gdk.Screen.get_default()
+            style_context = Gtk.StyleContext()
+            style_context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
             # Fire up the main window
             self.MainWindow = self.builder.get_object("main_window")
             self.MainWindow.set_application(application)
             self.MainWindow.show()
+
+
+
         except GObject.GError:
             print("Error reading GUI file")
             raise
+
+
 
     def close(self, *args):
         self.MainWindow.destroy()
@@ -73,8 +84,13 @@ class AppWindow(object):
 
         self.optionsmenu = Gtk.Popover.new(tool_options)
         self.optionsmenu.set_size_request(50, 100)
-        label = Gtk.Label("Hi!")
-        self.optionsmenu.add(label)
+
+        raw_toolbar_delete = self.builder.get_object("tool_raw_delete")
+        raw_toolbar_delete.connect("clicked", self.onRawJsonDelete)
+
+
+        popovermenu = self.builder.get_object("popoverbox")
+        self.optionsmenu.add(popovermenu)
 
         # toolbar items RES json side
         res_toolbar_save = self.builder.get_object("tool_res_save")
